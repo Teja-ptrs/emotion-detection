@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  emotion-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: emotion-ai-production
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - HOST=0.0.0.0
+      - DATABASE_URL=sqlite:///./emotion_ai.db
+      - MODEL_PATH=models/emotion_model.keras
+      - CORS_ORIGINS=*
+    volumes:
+      - ./data:/app/data
+      - ./emotion_ai.db:/app/emotion_ai.db

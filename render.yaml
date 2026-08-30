@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: emotion-ai-system
+    env: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: HOST
+        value: 0.0.0.0
+      - key: MODEL_PATH
+        value: models/emotion_model.keras
+      - key: DATABASE_URL
+        value: sqlite:///./emotion_ai.db
+      - key: CORS_ORIGINS
+        value: "*"

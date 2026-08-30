@@ -1,0 +1,23 @@
+# Ignore heavy local environment directories from Docker build context
+venv/
+node_modules/
+frontend/node_modules/
+.git/
+.pytest_cache/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore raw 287MB dataset in build context (models are already trained)
+data/fer2013.csv
+data/*.zip
+data/download_temp.*
+
+# Ignore local temporary files
+.env
+*.sqlite
+*.sqlite3
+.vscode/
+.idea/
+.DS_Store

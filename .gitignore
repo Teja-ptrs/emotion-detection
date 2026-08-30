@@ -1,0 +1,56 @@
+# ===============================================
+# Git Ignore Configuration for Emotion AI
+# ===============================================
+
+# 1. Virtual Environments & Local Python Bytecode
+venv/
+env/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 2. Local Environment & Secrets
+.env
+.env.local
+.env.*.local
+
+# 3. Local SQLite Database Files
+emotion_ai.db
+*.sqlite
+*.sqlite3
+*.db
+
+# 4. Node Dependencies & Local Build Artifacts
+node_modules/
+frontend/node_modules/
+frontend/dist/
+dist/
+build/
+.vite/
+
+# 5. Raw Large Datasets (>100MB)
+data/fer2013.csv
+data/*.zip
+data/*.tar.gz
+data/download_temp.*
+
+# 6. Redundant Checkpoints (Preserve production models)
+models/*_final.keras
+!models/emotion_model.keras
+!models/face_landmarker.task
+!models/.gitkeep
+
+# 7. Test & IDE Artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+training/training_history.json
+training/evaluation_report.json
+training/evaluation_metrics.json
+training/training_log.csv

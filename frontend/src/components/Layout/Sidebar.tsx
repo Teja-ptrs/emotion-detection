@@ -40,7 +40,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, isLiv
           </div>
           <div>
             <h1 className="font-bold text-base tracking-tight text-white flex items-center gap-1.5">
-              Emotion AI <span className="text-[10px] bg-brand-primary/20 text-brand-primary px-1.5 py-0.5 rounded font-mono">v1.0</span>
+              Facial Emotion Detection <span className="text-[10px] bg-brand-primary/20 text-brand-primary px-1.5 py-0.5 rounded font-mono">v1.0</span>
             </h1>
             <p className="text-xs text-slate-400 font-medium">Real-Time Facial Analysis</p>
           </div>

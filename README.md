@@ -1,3 +1,13 @@
+---
+title: Real Time Facial Emotion Recognition
+emoji: 🎭
+colorFrom: indigo
+colorTo: purple
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # AI-Based Real-Time Facial Emotion Recognition and Analysis System
 
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?logo=fastapi)](https://fastapi.tiangolo.com)

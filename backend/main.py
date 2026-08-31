@@ -61,7 +61,7 @@ if os.path.exists(dist_path):
 if __name__ == "__main__":
     import uvicorn
     host = os.getenv("HOST", "0.0.0.0")
-    port = int(os.getenv("PORT", "8000"))
+    port = int(os.getenv("PORT", "7860"))
     reload = os.getenv("RELOAD", "false").lower() == "true"
     print(f"Starting server on {host}:{port} (reload={reload})...")
     uvicorn.run("backend.main:app", host=host, port=port, reload=reload)

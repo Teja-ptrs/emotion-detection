@@ -42,11 +42,17 @@ export const CameraFeed: React.FC<CameraFeedProps> = ({
 
   // Auto-attach active MediaStream when component mounts or tab is switched back
   useEffect(() => {
-    if (videoRef.current && stream && isActive) {
-      if (videoRef.current.srcObject !== stream) {
-        videoRef.current.srcObject = stream;
-        videoRef.current.play().catch(() => {});
-      }
+    const video = videoRef.current;
+    if (video && stream && isActive) {
+      video.srcObject = stream;
+      const handleLoadedMetadata = () => {
+        video.play().catch((e) => console.warn('[CameraFeed] Video play on metadata:', e));
+      };
+      video.onloadedmetadata = handleLoadedMetadata;
+      video.play().catch((e) => console.warn('[CameraFeed] Immediate video play:', e));
+      return () => {
+        if (video) video.onloadedmetadata = null;
+      };
     }
   }, [stream, isActive, videoRef]);
 

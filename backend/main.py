@@ -1,8 +1,9 @@
 import os
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse, JSONResponse
 
 from backend.core.config import settings
 from backend.core.database import init_db
@@ -38,25 +39,44 @@ app.add_middleware(
 app.include_router(api_router, prefix=settings.API_PREFIX, tags=["Emotion Analysis API"])
 app.include_router(ws_router, prefix=settings.API_PREFIX, tags=["Real-Time Stream"])
 
-# Mount static assets and SPA fallback
-dist_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend", "dist")
+# Static frontend paths
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+dist_path = os.path.join(BASE_DIR, "frontend", "dist")
 assets_path = os.path.join(dist_path, "assets")
 
+# Mount assets directory if present
 if os.path.exists(assets_path):
     app.mount("/assets", StaticFiles(directory=assets_path), name="static-assets")
 
-if os.path.exists(dist_path):
-    from fastapi.responses import FileResponse
-    
-    @app.get("/{full_path:path}")
-    async def serve_spa(full_path: str):
-        # Allow API routes to be handled by routers
-        if full_path.startswith("api"):
-            return None
-        file_target = os.path.join(dist_path, full_path)
-        if os.path.exists(file_target) and os.path.isfile(file_target):
-            return FileResponse(file_target)
-        return FileResponse(os.path.join(dist_path, "index.html"))
+# Explicit Root Route
+@app.get("/", include_in_schema=False)
+async def serve_root():
+    index_path = os.path.join(dist_path, "index.html")
+    if os.path.exists(index_path):
+        return FileResponse(index_path)
+    return JSONResponse(
+        status_code=503,
+        content={
+            "error": "Frontend build missing",
+            "message": "frontend/dist/index.html was not found. Please ensure 'npm --prefix frontend install && npm --prefix frontend run build' is included in your Render Build Command."
+        }
+    )
+
+# SPA Catch-all Route for client-side navigation (/live, /dashboard, /history, /analytics)
+@app.get("/{full_path:path}", include_in_schema=False)
+async def serve_spa_fallback(full_path: str):
+    if full_path.startswith("api"):
+        raise HTTPException(status_code=404, detail="API endpoint not found")
+
+    file_target = os.path.join(dist_path, full_path)
+    if os.path.exists(file_target) and os.path.isfile(file_target):
+        return FileResponse(file_target)
+
+    index_path = os.path.join(dist_path, "index.html")
+    if os.path.exists(index_path):
+        return FileResponse(index_path)
+
+    raise HTTPException(status_code=404, detail=f"Path not found: {full_path}")
 
 if __name__ == "__main__":
     import uvicorn
